@@ -7,10 +7,13 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:src="@drawable/mai" />
+        android:layout_width="315dp"
+        android:layout_height="671dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="54dp"
+        android:src="@drawable/jol" />
 
     <ImageButton
         android:id="@+id/colorPickerButton"
@@ -22,5 +25,17 @@
         android:src="@drawable/ic_palette"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:onClick="pickColor" />
+
+    <ImageButton
+        android:id="@+id/imagePickerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="20dp"
+        android:src="@drawable/ic_image_picker"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:onClick="pickImage" />
+
 
 </RelativeLayout>
