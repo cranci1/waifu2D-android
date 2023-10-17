@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,12 +36,28 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide();
+
         setContentView(R.layout.activity_main);
 
         imageView = findViewById(R.id.imageView);
         colorPickerButton = findViewById(R.id.colorPickerButton);
         imagePickerButton = findViewById(R.id.imagePickerButton);
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    REQUEST_STORAGE_PERMISSION);
+        } else {
+            // Permission already granted, load saved data
+            loadData();
+        }
+    }
+
+    private void loadData() {
         // Load background color and image from SharedPreferences
         int savedColor = loadColor();
         Uri savedImageUri = loadImageUri();
@@ -50,22 +67,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (savedImageUri != null) {
-            try {
-                Bitmap bitmap = loadBitmapFromUri(savedImageUri);
-                if (bitmap != null) {
-                    imageView.setImageBitmap(bitmap);
-                } else {
-                    Log.e("MainActivity", "Bitmap is null for URI: " + savedImageUri);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.e("MainActivity", "Error loading image from URI: " + savedImageUri, e);
-            }
+            setImageFromUri(savedImageUri);
         } else {
-            Log.d("MainActivity", "No saved image URI found.");
+            // Set default image only when saved image URI is null
+            Log.d("MainActivity", "Selected Image URI: " );
         }
+    }
 
-
+    private void setImageFromUri(Uri imageUri) {
+        try {
+            Bitmap bitmap = loadBitmapFromUri(imageUri);
+            if (bitmap != null) {
+                imageView.setImageBitmap(bitmap);
+            } else {
+                Log.e("MainActivity", "Bitmap is null for URI: " + imageUri);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("MainActivity", "Error loading image from URI: " + imageUri, e);
+        }
     }
 
     private Bitmap loadBitmapFromUri(Uri uri) {
@@ -129,12 +149,7 @@ public class MainActivity extends AppCompatActivity {
             saveImageUri(selectedImageUri);
 
             // Set the image in the ImageView
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
-                imageView.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            setImageFromUri(selectedImageUri);
         }
     }
 
