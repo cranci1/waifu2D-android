@@ -7,10 +7,23 @@
 
     <ImageView
         android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="575dp"
+        android:layout_centerInParent="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/jol"/>
+
+
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:src="@drawable/jol" />
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:padding="16dp"
+        android:text="Yare Yare dawa"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
 
     <ImageButton
         android:id="@+id/colorPickerButton"

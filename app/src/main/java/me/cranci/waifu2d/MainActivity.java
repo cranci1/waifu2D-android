@@ -1,13 +1,14 @@
 package me.cranci.waifu2d;
 
-import android.content.pm.PackageManager;
-import android.Manifest;
 import android.content.Intent;
+import android.widget.TextView;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.Manifest;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -33,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton colorPickerButton;
     private ImageButton imagePickerButton;
 
+    private int currentColor;
+    private Uri currentImageUri;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         setContentView(R.layout.activity_main);
+
+        TextView textView = findViewById(R.id.textView);
 
         imageView = findViewById(R.id.imageView);
         colorPickerButton = findViewById(R.id.colorPickerButton);
@@ -55,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
             // Permission already granted, load saved data
             loadData();
         }
+
+        textView.setText("Yare Yare dawa");
     }
 
     private void loadData() {
@@ -67,10 +75,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (savedImageUri != null) {
+            Log.d("MainActivity", "Loaded image URI in loadData: " + savedImageUri);
             setImageFromUri(savedImageUri);
         } else {
             // Set default image only when saved image URI is null
-            Log.d("MainActivity", "Selected Image URI: " );
+            Log.d("MainActivity", "Selected Image URI: ");
         }
     }
 
@@ -116,6 +125,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Set the background color
         getWindow().getDecorView().setBackgroundColor(randomColor);
+
+        // Update the current color
+        currentColor = randomColor;
     }
 
     public void pickImage(View view) {
@@ -150,6 +162,9 @@ public class MainActivity extends AppCompatActivity {
 
             // Set the image in the ImageView
             setImageFromUri(selectedImageUri);
+
+            // Update the current image URI
+            currentImageUri = selectedImageUri;
         }
     }
 
@@ -165,24 +180,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveImageUri(Uri imageUri) {
-        SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
-        String encodedUri = Uri.encode(imageUri.toString());
-        editor.putString(IMAGE_URI_KEY, encodedUri);
-        editor.apply();
-        Log.d("MainActivity", "Image URI saved: " + encodedUri);
+        if (imageUri != null) {
+            SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
+            editor.putString(IMAGE_URI_KEY, imageUri.toString());
+            editor.apply();
+            Log.d("MainActivity", "Image URI saved: " + imageUri);
+        }
     }
 
     private Uri loadImageUri() {
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         String encodedUriString = prefs.getString(IMAGE_URI_KEY, null);
         if (encodedUriString != null) {
-            String decodedUriString = Uri.decode(encodedUriString);
-            Uri uri = Uri.parse(decodedUriString);
-            Log.d("MainActivity", "Loaded image URI: " + uri);
-            return uri;
+            try {
+                Uri uri = Uri.parse(encodedUriString);
+                Log.d("MainActivity", "Loaded image URI: " + uri);
+                return uri;
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("MainActivity", "Error parsing loaded image URI: " + encodedUriString, e);
+            }
         }
         return null;
     }
-
-
 }
