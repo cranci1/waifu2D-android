@@ -17,7 +17,7 @@
  ## To-Do list:
 
  - Working gestures
- - ~~Custom Image~~
+ - ~~Custom Image~~ ( need to fix the size)
  - Custom Text
  - Dynamic Buttons
  - Dynamic Text

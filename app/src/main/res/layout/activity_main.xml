@@ -8,13 +8,15 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="346dp"
-        android:layout_height="522dp"
-        android:layout_alignBottom="@+id/textView"
+        android:layout_width="300dp"
+        android:layout_height="550dp"
         android:layout_centerInParent="true"
-        android:layout_marginBottom="114dp"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         android:src="@drawable/jol" />
+
 
     <TextView
         android:id="@+id/textView"
