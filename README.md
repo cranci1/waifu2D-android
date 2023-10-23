@@ -13,3 +13,13 @@
  iOS version: [here](https://github.com/cranci1/waifu2D)
 
  ---
+
+ ## To-Do list:
+
+ - Working gestures
+ - ~~Custom Image~~
+ - Custom Text
+ - Dynamic Buttons
+ - Dynamic Text
+ - Settings Tab
+ - Gallery
