@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.Manifest;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
@@ -18,9 +20,10 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
 
     private static final String PREFS_NAME = "MyPrefsFile";
     private static final String BACKGROUND_COLOR_KEY = "BackgroundColor";
@@ -36,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private int currentColor;
     private Uri currentImageUri;
 
+    private GestureDetector gestureDetector;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
         imageView = findViewById(R.id.imageView);
         colorPickerButton = findViewById(R.id.colorPickerButton);
         imagePickerButton = findViewById(R.id.imagePickerButton);
+
+        // Initialize GestureDetector
+        gestureDetector = new GestureDetector(this, this);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -201,5 +209,46 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return null;
+    }
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        // Required method implementation
+        return true;
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        // Check for left-to-right swipe
+        if (e1.getX() < e2.getX()) {
+            pickImage(imagePickerButton);
+        }
+        // Check for bottom-to-top swipe
+        else if (e1.getY() > e2.getY()) {
+            pickColor(colorPickerButton);
+        }
+        return true;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+        // Required method implementation
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        // Required method implementation
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+        // Required method implementation
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        // Required method implementation
+        return false;
     }
 }
